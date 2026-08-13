@@ -52,13 +52,15 @@ struct MenuBarStatusLabel: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            Image(nsImage: MenuBarIcon.image(opacity: store.menuBarIconOn ? 1 : 0.3))
+            Image(nsImage: MenuBarIcon.image(opacity: store.menuBarIconOn ? 1 : MenuBarIcon.dimmedOpacity))
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 18, height: 18)
-            Text(store.menuBarTitle)
-                .font(.system(size: store.fontSize.menuBarPointSize, weight: .medium).monospacedDigit())
+                .frame(width: MenuBarIcon.pointSize, height: MenuBarIcon.pointSize)
+            if !store.menuBarTitle.isEmpty {
+                Text(store.menuBarTitle)
+                    .font(.system(size: store.fontSize.menuBarPointSize, weight: .medium).monospacedDigit())
+            }
         }
         .id("\(store.menuBarIconOn)-\(store.menuBarTitle)")
         .onReceive(NotificationCenter.default.publisher(for: .punchReminderOpenConfirm)) { _ in
@@ -69,16 +71,23 @@ struct MenuBarStatusLabel: View {
 }
 
 enum MenuBarIcon {
+    static let pointSize: CGFloat = 22
+    static let dimmedOpacity: CGFloat = 0.3
+
     static func image(opacity: CGFloat) -> NSImage {
-        let source = baseImage
         if opacity >= 1 {
-            return source
+            return baseImage
         }
-        let size = source.size
-        return NSImage(size: size, flipped: false) { rect in
+        if let dimmedImage {
+            return dimmedImage
+        }
+        let source = baseImage
+        let faded = NSImage(size: source.size, flipped: false) { rect in
             source.draw(in: rect, from: .zero, operation: .sourceOver, fraction: opacity)
             return true
         }
+        dimmedImage = faded
+        return faded
     }
 
     private static var baseImage: NSImage {
@@ -86,11 +95,12 @@ enum MenuBarIcon {
             return cached
         }
         let source = NSApp.applicationIconImage
-        let image = (source?.copy() as? NSImage) ?? NSImage(size: NSSize(width: 18, height: 18))
-        image.size = NSSize(width: 18, height: 18)
+        let image = (source?.copy() as? NSImage) ?? NSImage(size: NSSize(width: pointSize, height: pointSize))
+        image.size = NSSize(width: pointSize, height: pointSize)
         cached = image
         return image
     }
 
     private static var cached: NSImage?
+    private static var dimmedImage: NSImage?
 }

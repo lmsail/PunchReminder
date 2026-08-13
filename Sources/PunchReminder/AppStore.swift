@@ -18,6 +18,7 @@ final class AppStore: ObservableObject {
     @Published var alertTone: AlertTone
     @Published var enhancedAlertEnabled: Bool
     @Published var showReminderText: Bool
+    @Published var showMenuBarCountdown: Bool
     @Published var reminderText: String
     @Published var pendingConfirm: ConfirmPunchRequest?
     @Published var enhancedAlert: EnhancedAlert?
@@ -42,6 +43,7 @@ final class AppStore: ObservableObject {
         alertTone = loaded.alertTone
         enhancedAlertEnabled = loaded.enhancedAlertEnabled
         showReminderText = loaded.showReminderText
+        showMenuBarCountdown = loaded.showMenuBarCountdown
         reminderText = loaded.reminderText
         let today = ReminderLogic.dayString(from: Date())
         if let runtime = loaded.dayRuntime, runtime.day == today {
@@ -112,6 +114,7 @@ final class AppStore: ObservableObject {
             countdown: countdown,
             isAlerting: isMenuBarAlerting,
             showReminderText: showReminderText,
+            showMenuBarCountdown: showMenuBarCountdown,
             reminderText: reminderText
         )
     }
@@ -387,6 +390,11 @@ final class AppStore: ObservableObject {
         persist()
     }
 
+    func setShowMenuBarCountdown(_ enabled: Bool) {
+        showMenuBarCountdown = enabled
+        persist()
+    }
+
     func setReminderText(_ text: String) {
         reminderText = text
         persist()
@@ -621,6 +629,7 @@ final class AppStore: ObservableObject {
                 alertTone: alertTone,
                 enhancedAlertEnabled: enhancedAlertEnabled,
                 showReminderText: showReminderText,
+                showMenuBarCountdown: showMenuBarCountdown,
                 reminderText: reminderText
             )
         )
@@ -671,7 +680,7 @@ final class AppStore: ObservableObject {
         if isMenuBarAlerting {
             if blinkTimer == nil {
                 menuBarIconOn = true
-                let timer = Timer(timeInterval: 0.4, repeats: true) { [weak self] _ in
+                let timer = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in
                     Task { @MainActor in
                         self?.menuBarIconOn.toggle()
                     }

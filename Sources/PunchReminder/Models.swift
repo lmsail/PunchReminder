@@ -184,6 +184,7 @@ struct PersistedState: Codable {
     var alertTone: AlertTone
     var enhancedAlertEnabled: Bool
     var showReminderText: Bool
+    var showMenuBarCountdown: Bool
     var reminderText: String
 
     init(
@@ -197,6 +198,7 @@ struct PersistedState: Codable {
         alertTone: AlertTone = .hero,
         enhancedAlertEnabled: Bool = true,
         showReminderText: Bool = true,
+        showMenuBarCountdown: Bool = true,
         reminderText: String = "该打卡了"
     ) {
         self.rules = rules
@@ -209,6 +211,7 @@ struct PersistedState: Codable {
         self.alertTone = alertTone
         self.enhancedAlertEnabled = enhancedAlertEnabled
         self.showReminderText = showReminderText
+        self.showMenuBarCountdown = showMenuBarCountdown
         self.reminderText = reminderText
     }
 
@@ -224,6 +227,7 @@ struct PersistedState: Codable {
         alertTone = try container.decodeIfPresent(AlertTone.self, forKey: .alertTone) ?? .hero
         enhancedAlertEnabled = try container.decodeIfPresent(Bool.self, forKey: .enhancedAlertEnabled) ?? true
         showReminderText = try container.decodeIfPresent(Bool.self, forKey: .showReminderText) ?? true
+        showMenuBarCountdown = try container.decodeIfPresent(Bool.self, forKey: .showMenuBarCountdown) ?? true
         reminderText = try container.decodeIfPresent(String.self, forKey: .reminderText) ?? "该打卡了"
     }
 }

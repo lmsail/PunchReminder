@@ -203,10 +203,14 @@ enum ReminderLogic {
         countdown: String,
         isAlerting: Bool,
         showReminderText: Bool,
+        showMenuBarCountdown: Bool,
         reminderText: String
     ) -> String {
         if isAlerting && showReminderText && !reminderText.isEmpty {
             return reminderText
+        }
+        if !showMenuBarCountdown {
+            return ""
         }
         return countdown
     }

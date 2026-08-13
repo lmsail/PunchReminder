@@ -292,6 +292,7 @@ struct LogicTests {
                 countdown: "06时50分21秒",
                 isAlerting: true,
                 showReminderText: true,
+                showMenuBarCountdown: true,
                 reminderText: "该打卡了"
             ) == "该打卡了",
             "提醒期间应显示自定义文字"
@@ -301,9 +302,30 @@ struct LogicTests {
                 countdown: "06时50分21秒",
                 isAlerting: false,
                 showReminderText: true,
+                showMenuBarCountdown: true,
                 reminderText: "该打卡了"
             ) == "06时50分21秒",
             "非提醒期间应显示倒计时"
+        )
+        try expect(
+            ReminderLogic.menuBarDisplayTitle(
+                countdown: "06时50分21秒",
+                isAlerting: false,
+                showReminderText: false,
+                showMenuBarCountdown: false,
+                reminderText: "该打卡了"
+            ) == "",
+            "关闭倒计时后状态栏不应显示文字"
+        )
+        try expect(
+            ReminderLogic.menuBarDisplayTitle(
+                countdown: "06时50分21秒",
+                isAlerting: true,
+                showReminderText: true,
+                showMenuBarCountdown: false,
+                reminderText: "该打卡了"
+            ) == "该打卡了",
+            "关闭倒计时后提醒期间仍应显示自定义文字"
         )
 
         try expect(

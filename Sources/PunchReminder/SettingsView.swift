@@ -431,7 +431,14 @@ struct GeneralSettingsView: View {
                 }
                 .pickerStyle(.radioGroup)
 
-                Text("预览：\(store.menuBarTitle)")
+                Toggle("状态栏显示倒计时", isOn: Binding(
+                    get: { store.showMenuBarCountdown },
+                    set: { store.setShowMenuBarCountdown($0) }
+                ))
+                Text("关闭后状态栏只保留图标。提醒期间若开启了自定义文字，仍会显示该文字。")
+                    .foregroundStyle(.secondary)
+
+                Text("预览：\(store.menuBarTitle.isEmpty ? "仅图标" : store.menuBarTitle)")
                     .font(.system(size: 13 * store.fontSize.scale, weight: .medium).monospacedDigit())
                     .foregroundStyle(Surface.label)
                 Text("菜单栏和设置页会一起变大或变小。")
